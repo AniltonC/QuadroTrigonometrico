@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+    </head>
+    <body>
+        <div id="info" class="info"></div>
+    </body>
+    <script>
+        console.log("teste")
+        function loadInfo() {
+            $.ajax({
+                url: "http://localhost:5002/info",
+                type: 'GET',
+                success: function(res) {
+                    document.getElementById("info").innerHTML = res
+                    console.log(res);
+                }
+            });
+        }
+        setInterval(loadInfo, 2000);
+    </script>
+    <style>
+        .info{
+            word-break: break-word;
+            white-space: pre-line;
+        }
+    </style>
+</html>
