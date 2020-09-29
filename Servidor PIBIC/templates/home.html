@@ -2,7 +2,7 @@
     <head>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
     </head>
-    <body>
+    <body style="background-color: black;">
         <div id="info" class="info"></div>
     </body>
     <script>
@@ -17,10 +17,11 @@
                 }
             });
         }
-        setInterval(loadInfo, 2000);
+        setInterval(loadInfo, 500);
     </script>
     <style>
         .info{
+            color: white;
             word-break: break-word;
             white-space: pre-line;
         }

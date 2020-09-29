@@ -14,5 +14,5 @@ class Esp:
         self.tan = tan
     
     def printHome(self):
-        msg = "id: " + self.id + "\n    ang: " + self.angle + "\n    sen: " + self.sen + "\n    cos: " + self.cos + "\n    tan: " + self.tan + "\n\n"
+        msg = "Id: " + self.id + "\n    ang: " + self.angle + "°\n    sen: " + self.sen + "\n    cos: " + self.cos + "\n    tan: " + self.tan + "\n\n"
         return msg
