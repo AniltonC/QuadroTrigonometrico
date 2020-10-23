@@ -1,4 +1,17 @@
 /*
+||
+|| @file Hall_sensor.cpp
+|| @version 1.0
+|| @author Anilton Carlos de Lima Reis
+|| @contact aclr@icomp.ufam.edu.br
+||
+|| @description
+|| | Esta é uma implementação básica da biblioteca Hall Sensor para Quadro Trigonométrico.
+|| #
+||
+*/
+
+/*
  * Tabela de Leitura dos Sensores
  *  SEM LEITURA   - 111
  *  0| 90|180|270 - 110
@@ -7,7 +20,6 @@
  * 45|135|225|315 - 011
  * 60|150|240|330 - 010
  * 75|165|255|345 - 001
- *
  */
 
 #include "Arduino.h"
@@ -214,15 +226,3 @@ String Hall_sensor::get_Tangent()
         return String(saida);
     }
 }
-
-/*
-double Hall_sensor::get_Seno(){
-    return sin(this->angle_Rad);
-}
-double Hall_sensor::get_Cosseno(){
-    return cos(this->angle_rad);
-}
-double Hall_sensor::get_Tangente(){
-    return tan(this->angle_rad);
-}
-*/

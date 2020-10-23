@@ -1,3 +1,15 @@
+/*
+||
+|| @file Hall_sensor.h
+|| @version 1.0
+|| @author Anilton Carlos de Lima Reis
+|| @contact aclr@icomp.ufam.edu.br
+||
+|| @description
+|| | Esta é uma implementação básica da biblioteca Hall Sensor para Quadro Trigonométrico.
+|| #
+||
+*/
 class Hall_sensor
 {
 private:

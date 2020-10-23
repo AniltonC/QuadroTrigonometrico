@@ -1,3 +1,15 @@
+/*
+||
+|| @file main.cpp
+|| @version 1.0
+|| @author Anilton Carlos de Lima Reis
+|| @contact aclr@icomp.ufam.edu.br
+||
+|| @description
+|| | Esta é uma implementação básica do Quadro Trigonométrico.
+|| #
+||
+*/
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -11,7 +23,7 @@
 const char* ssid = "REIS's HOUSE";
 const char* password = "23063127";
 
-//Your Domain name with URL path or IP address with path
+//Your Domain name with URL path or IP address with path // URL do seu domínio ou IP local
 String serverName = "http://192.168.0.108:5002/quadTrig";
 
 // the following variables are unsigned longs because the time, measured in
@@ -69,6 +81,8 @@ Keypad_I2C I2C_Keypad(makeKeymap(keys), rowPins, colPins, ROWS, COLS, keypad_add
 String idNumber;
 
 void setup() {
+    //Utilizando o PlatformIO é preciso alterar o monitor_speed manualmente no arquivo platformio.ini
+    //monitor_speed = 115200
     Serial.begin(115200); 
     // Inicializacao do LCD
     I2C_LCD.begin(16,2);
@@ -84,7 +98,7 @@ void setup() {
     pinMode(D3_SHpin, INPUT);
     pinMode(D4_SHpin, INPUT);
 
-    // Coneccao de rede wifi
+    // Conecção de rede wifi
     I2C_LCD.home();
     I2C_LCD.printf("Conectando Rede");
     I2C_LCD.setCursor(0,1);
@@ -115,14 +129,13 @@ void setup() {
     
     I2C_LCD.clear();
     I2C_LCD.home();
-    //I2C_LCD.printf("0123456789012345");
     I2C_LCD.printf("   Rede Wifi    ");
     I2C_LCD.setCursor(0,1);
     I2C_LCD.printf("   Conectada    ");
 
     delay(1000);
 
-    // Requisicao de Identificacao do usuario
+    // Requisicao de Identificacao do usuario, criar um método getId() e verifyId()
     // Entrada de 8 digitos: matricula UFAM
     I2C_LCD.clear();
     I2C_LCD.home();
@@ -156,16 +169,13 @@ void setup() {
         } 
         delay(20);
     }
-    
-    // Checagem da identificacao no servidor
 
-    // Ajuste de posicionamento do Quadro
+    // Ajuste de posicionamento do Quadro | O quadro começa a contar em 0°, portanto é preciso situar o eixo em 0°
     bool eixoSetup = 0;
     I2C_LCD.clear();
     I2C_LCD.home();
     I2C_LCD.printf("Situe o eixo em");
     I2C_LCD.setCursor(0,1);
-  //I2C_LCD.printf("0123456789012345");
     I2C_LCD.printf("00 e aperte #:");
 
     while(eixoSetup == 0){
@@ -187,6 +197,7 @@ void setup() {
     I2C_LCD.clear();   
 }
 
+// Função que imprime o layout do LCD
 void Lcd_Layout(){
     I2C_LCD.clear();
     I2C_LCD.home();
@@ -199,6 +210,7 @@ void Lcd_Layout(){
     I2C_LCD.print("C:");
 }
 
+// Função que realiza a requisição http no servidor e envia os dados atuais do quadro
 void http_get(String serverPath){
     //Send an HTTP POST request every 10 minutes
     if ((millis() - lastTime) > timerDelay) {
@@ -228,7 +240,6 @@ void http_get(String serverPath){
         else {
             Serial.println("WiFi Disconnected");
             I2C_LCD.clear();
-          //I2C_LCD.print("0123456789012345");
             I2C_LCD.print("      Wifi      ");
             I2C_LCD.setCursor(0,1);
             I2C_LCD.print("  Desconectado  ");
@@ -239,7 +250,6 @@ void http_get(String serverPath){
 }
 
 String last_Angle;
-//String last_ServerPath;
 bool print_Infos = 0;
 
 void loop() {
@@ -250,10 +260,17 @@ void loop() {
     if(last_Angle != actual_Angle){
         print_Infos = 1;
         last_Angle = actual_Angle;
-    }/* else {
-        actual_ServerPath = last_ServerPath;
-    }*/
+    }
 
+    /*
+     * Inserir método para reajuste de posição do eixo, caso esteja fora da posição correta
+     * Caso seja pressionada alguma tecla específica, como #, resetar o posionamento do eixo Quad_Trig.reset();
+     */
+    
+    /*
+     * Caso tenha ocorrido alguma alteração de leitura do angulo:
+     * imprimir as novas informações no LCD e enviar ao servidor
+     */
     if(print_Infos == 1){
         Lcd_Layout();
         actual_ServerPath += "&ang=" + actual_Angle;
@@ -289,7 +306,6 @@ void loop() {
         I2C_LCD.setCursor(11,1);
         I2C_LCD.print(cosine);
 
-        //last_ServerPath = actual_ServerPath;
         print_Infos = 0;
 
         http_get(actual_ServerPath);

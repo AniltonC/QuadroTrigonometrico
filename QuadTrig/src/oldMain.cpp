@@ -1,4 +1,5 @@
-/**
+// Não rodar este arquivo simultaneamente com o arquivo main.cpp, conflito de funções com o mesmo nome
+/*
 #include <Arduino.h>
 
 #include <Keypad_I2C.h>        // I2C Keypad library by Joe Young https://github.com/joeyoung/arduino_keypads
