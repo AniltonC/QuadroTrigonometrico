@@ -1,12 +1,12 @@
 /*
 ||
 || @file main.cpp
-|| @version 1.0
-|| @author Anilton Carlos de Lima Reis
-|| @contact aclr@icomp.ufam.edu.br
+|| @version 1.1
+|| @author Anilton Carlos
+|| @contact aclr@icomp.ufam.edu.br / aniltoncarlos9@gmail.com
 ||
 || @description
-|| | Esta é uma implementação básica do Quadro Trigonométrico.
+|| | This is a basic implementation of the Trigonometric Board library.
 || #
 ||
 */
@@ -17,7 +17,8 @@
 
 #include <LiquidCrystal_I2C.h>
 #include <Keypad_I2C.h>
-#include <Hall_sensor.h>
+//#include <Hall_sensor.h>
+#include <TrigonometricBoard.h>
 
 // Rede Wifi
 const char* ssid = "REIS's HOUSE";
@@ -35,13 +36,15 @@ unsigned long lastTime = 0;
 unsigned long timerDelay = 1000;
 int ang = 0;
 
-// Pinos Sensores Hall
+/* Pinos Sensores Hall
 #define D0_SHpin 16
 #define D3_SHpin 0
 #define D4_SHpin 2
-
 // Create instance for LHall sensor
-Hall_sensor Quad_Trig(D0_SHpin, D3_SHpin, D4_SHpin);
+Hall_sensor Quad_Trig(continuosMode, D0_SHpin, D3_SHpin, D4_SHpin);
+*/
+
+TrigonometricBoard Board;
 
 // Enderecos I2C do LCD e Teclado
 #define lcd_addr 0x27    // I2C address of typical I2C LCD Backpack
@@ -93,10 +96,9 @@ void setup() {
     // Inicializacao do Teclado
     I2C_Keypad.begin();
     
-    // Inicializacao dos pinos dos sensores
-    pinMode(D0_SHpin, INPUT);
-    pinMode(D3_SHpin, INPUT);
-    pinMode(D4_SHpin, INPUT);
+    // Inicializacao dos Sensores
+    //Quad_Trig.begin();
+    Board.begin(continuous);
 
     // Conecção de rede wifi
     I2C_LCD.home();
@@ -180,7 +182,8 @@ void setup() {
 
     while(eixoSetup == 0){
 
-        int anguloAtual = Quad_Trig.get_Ang_Ajuste();
+        //int anguloAtual = Quad_Trig.get_Ang_Ajuste();
+        int anguloAtual = Board.axis_Position();
         I2C_LCD.setCursor(14,1);
         I2C_LCD.print(anguloAtual);
         if(anguloAtual == 0){
@@ -249,14 +252,16 @@ void http_get(String serverPath){
     }
 }
 
-String last_Angle;
+String last_Angle = "";
 bool print_Infos = 0;
 
 void loop() {
 
     String actual_ServerPath = serverName + "?id=" + idNumber;
-    Quad_Trig.read_Angle();
-    String actual_Angle = Quad_Trig.get_Angle_Deg();
+    //Quad_Trig.read_Angle();
+    Board.read_Angle();
+    //String actual_Angle = Quad_Trig.get_Angle_Deg();
+    String actual_Angle = Board.get_Angle(degree);
     if(last_Angle != actual_Angle){
         print_Infos = 1;
         last_Angle = actual_Angle;
@@ -280,7 +285,8 @@ void loop() {
         I2C_LCD.setCursor(4,0);
         I2C_LCD.print(actual_Angle);
 
-        String tangent = Quad_Trig.get_Tangent();
+        //String tangent = Quad_Trig.get_Tangent();
+        String tangent = Board.get_Tangent();
         actual_ServerPath += "&tan=" + tangent;
         if(tangent.length() > 5){
             tangent = "nExst";
@@ -290,7 +296,8 @@ void loop() {
         I2C_LCD.setCursor(11,0);
         I2C_LCD.print(tangent);
 
-        String sine = Quad_Trig.get_Sine();
+        //String sine = Quad_Trig.get_Sine();
+        String sine = Board.get_Sine();
         actual_ServerPath += "&sen=" + sine;
         if(sine.length() < 5){
             sine += ' ';
@@ -298,7 +305,8 @@ void loop() {
         I2C_LCD.setCursor(2,1);
         I2C_LCD.print(sine);
 
-        String cosine = Quad_Trig.get_Cosine();
+        //String cosine = Quad_Trig.get_Cosine();
+        String cosine = Board.get_Cosine();
         actual_ServerPath += "&cos=" + cosine;
         if(sine.length() < 5){
             sine += ' ';
